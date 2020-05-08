@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <script>
+        let api = `${window.location.origin}/api`
+    </script>
+    <script src="/c/nav.js"></script>
+    <script src="/c/result.js"></script>
+    <script src="/api.js"></script>
+    <script src="/c/playlist.js"></script>
+    <title>Theta Music</title>
+</head>
+
+<body>
+    <theta-nav></theta-nav>
+    <theta-list></theta-list>
+    <script>
+        const listElem = document.querySelector('theta-list')
+    </script>
+</body>
+
+</html>
