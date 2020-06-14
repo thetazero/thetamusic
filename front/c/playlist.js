@@ -105,11 +105,6 @@ customElements.define('theta-list', class extends HTMLElement {
         this.playing = false
         playbtn.addEventListener('click', () => {
             this.toggle()
-            if (this.playing) {
-                playbtn.classList.remove('rotate')
-            } else {
-                playbtn.classList.add('rotate')
-            }
         })
     }
 
@@ -120,6 +115,7 @@ customElements.define('theta-list', class extends HTMLElement {
     set queue(val) {
         this._queue = val
         this.shadowRoot.querySelector('#songs').innerHTML = val.map((e, i) => {
+            e = e.replace(".mp3", "")
             if (i == this._id) {
                 return `<div class='selected'>${e}</div>`
             }
@@ -127,8 +123,13 @@ customElements.define('theta-list', class extends HTMLElement {
         }).join('\n')
         Array.from(this.shadowRoot.querySelectorAll('#songs div')).forEach((elem, index) => {
             elem.addEventListener('click', () => {
-                this.id = index
-                this.play()
+                console.log(this.id, index)
+                if (this.id != index) {
+                    this.id = index
+                    this.play()
+                } else {
+                    this.toggle()
+                }
             })
         })
     }
@@ -156,22 +157,34 @@ customElements.define('theta-list', class extends HTMLElement {
     _setQueue(val) {
         console.log(val)
         this.queue = val.songs
+        this._srcs = []
         val.songs.forEach(e => {
             this._srcs.push(`/src/${val.name}/${e}`)
         })
+        caches.open(`music-${val.name}`).then(c => {
+            val.songs.forEach(e => {
+                let src = `/src/${val.name}/${e}`
+                c.add(src)
+            })
+        })
+        console.log(this._srcs)
         this.id = 0
         // this.play()
     }
     play() {
         let audioelem = this.shadowRoot.querySelector('#audio')
+        let playbtn = this.shadowRoot.querySelector("#play")
         audioelem.play()
         this.playing = true
+        playbtn.classList.remove('rotate')
     }
 
     pause() {
         let audioelem = this.shadowRoot.querySelector('#audio')
+        let playbtn = this.shadowRoot.querySelector("#play")
         audioelem.pause()
         this.playing = false
+        playbtn.classList.add('rotate')
     }
 
     toggle() {

@@ -1,12 +1,20 @@
 const genlists = require('./genlists')
 
 let playlists = genlists('../src')
-
 const express = require('express')
+const expressStaticGzip = require('express-static-gzip')
 const app = express()
 const port = 3000
 
-app.use('', express.static('../front'))
+const build = false
+
+if (build) {
+    app.use('', expressStaticGzip("../build", {
+        enableBrotli: true,
+    }))
+} else {
+    app.use('', express.static('../front'))
+}
 app.use('/src/', express.static('../src'))
 
 app.get('/api/lists/:count', (req, res) => {
@@ -30,21 +38,22 @@ app.get('/api/lists/:count', (req, res) => {
 
 app.get('/api/s/lists/:limit/:query?', (req, res) => {
     let data = []
-    let query;
+    let query
     try {
         query = new RegExp(req.params.query, "i")
     } catch (e) {
         res.json([])
+        return
     }
     let limit = req.params.limit
     let i = 0
     for (key in playlists) {
-        let match;
+        let match
         try {
             match = key.match(query)
         } catch (e) {
             // console.log(e)
-            match = false;
+            match = false
         }
         if (match) {
             i++

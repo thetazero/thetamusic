@@ -19,6 +19,7 @@ customElements.define('theta-nav', class extends HTMLElement {
 
     nav{
         z-index:100;
+        height:var(--size);
     }
 
     .logo{
@@ -114,6 +115,7 @@ customElements.define('theta-nav', class extends HTMLElement {
             res.classList.remove('hide')
         })
         searchElem.addEventListener('blur', () => {
+            searchElem.value = ''
             res.classList.add('hide')
         })
         searchElem.addEventListener('keyup', () => {
