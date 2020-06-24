@@ -157,19 +157,13 @@ customElements.define('theta-list', class extends HTMLElement {
     _setQueue(val) {
         console.log(val)
         this.queue = val.songs
-        this._srcs = []
-        val.songs.forEach(e => {
-            this._srcs.push(`/src/${val.name}/${e}`)
+        this._srcs = val.songs.map(e => {
+            return `/src/${val.name}/${e}`
         })
-        caches.open(`music-${val.name}`).then(c => {
-            val.songs.forEach(e => {
-                let src = `/src/${val.name}/${e}`
-                c.add(src)
-            })
-        })
-        console.log(this._srcs)
+        cachePlaylist(val.name, this._srcs, val)
         this.id = 0
-        // this.play()
+
+        console.log(this._srcs)
     }
     play() {
         let audioelem = this.shadowRoot.querySelector('#audio')

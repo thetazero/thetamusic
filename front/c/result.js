@@ -18,7 +18,7 @@ customElements.define('theta-result', class extends HTMLElement {
 }
 .author{
     font-size:.7em;
-    color:#999;
+    color:var(--textsubtle);
 }
 .songs{
     float:right;
