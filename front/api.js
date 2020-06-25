@@ -10,7 +10,8 @@ function search(query, limit) {
     } catch (e) {
         return data
     }
-    let songs = Object.keys(cachedPlaylists)
+    let songs = Object.keys(cachedLists)
+    let count = 0
     for (let i = 0; i < songs.length; i++) {
         let s = songs[i]
         console.log(s)
@@ -21,9 +22,9 @@ function search(query, limit) {
             match = false
         }
         if (match) {
-            i++
-            data.push(cachedPlaylists[s])
-            if (i >= limit) {
+            count++
+            data.push(cachedLists[s])
+            if (count >= limit) {
                 return data
             }
         }
@@ -32,19 +33,19 @@ function search(query, limit) {
 }
 
 async function getList(name) {
-    if (name in cachedPlaylists) {
-        return cachedPlaylists[name]
+    if (name in cachedLists) {
+        return cachedLists[name]
     }
     return fetch(`${api}/list/${name}`).then(data => data.json()).catch(e => [])
 }
 
-let cachedPlaylists = {}
+let cachedLists = {}
 function cachePlaylist(name, songs, val) {
-    if (name in cachedPlaylists) {
+    if (name in cachedLists) {
         return
     }
-    cachedPlaylists[name] = val
-    window.localStorage.setItem('cachedSongs', JSON.stringify(cachedPlaylists))
+    cachedLists[name] = val
+    window.localStorage.setItem('cachedSongs', JSON.stringify(cachedLists))
     caches.open(`music-${name}`).then(c => {
         songs.forEach(e => {
             c.add(e)
@@ -52,10 +53,16 @@ function cachePlaylist(name, songs, val) {
     })
 }
 
+function clearListCache(name) {
+    delete cachedLists[name]
+    window.localStorage.setItem('cachedSongs', JSON.stringify(cachedLists))
+    caches.delete(`music-${name}`)
+}
+
 function load() {
-    cachedPlaylists = JSON.parse(window.localStorage.getItem('cachedSongs'))
-    if (cachedPlaylists == null) {
-        cachedPlaylists = {}
+    cachedLists = JSON.parse(window.localStorage.getItem('cachedSongs'))
+    if (cachedLists == null) {
+        cachedLists = {}
     }
 }
 

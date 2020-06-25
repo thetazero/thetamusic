@@ -10,6 +10,8 @@ body {
   font-weight: 200;
   margin-top: 48px;
   overflow: hidden;
+  --hover: hsl(200, 40%, 80%);
+  --active: hsl(200, 100%, 70%);
 }
 
 input[type="text"],

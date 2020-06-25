@@ -23,7 +23,23 @@ customElements.define('theta-result', class extends HTMLElement {
 .songs{
     float:right;
 }
+.offline{
+    display:none;
+}
+.offline.yes{
+    display:inline-block;
+}
+.offline{
+    cursor:pointer;
+}
+.offline:hover span{
+    color:var(--hover);
+}
+.offline:active span{
+    color:var(--active);
+}
 </style>
+<span class='offline x'>[<span class='x'>x</span>]</span>
 <span class='name'></span>
 <span class='author'></span>
 <span class='songs'></span>
@@ -31,9 +47,15 @@ customElements.define('theta-result', class extends HTMLElement {
     }
 
     setData({ name, author, songs }) {
+        let o = this.shadowRoot.querySelector('.offline')
         let a = this.shadowRoot.querySelector('.author')
         let n = this.shadowRoot.querySelector('.name')
         let s = this.shadowRoot.querySelector('.songs')
+        if (name in cachedLists) {
+            o.classList.add('yes')
+        } else {
+            o.classList.remove('yes')
+        }
         if (author == undefined) {
             a.innerText = ''
             n.innerText = ''
@@ -44,5 +66,13 @@ customElements.define('theta-result', class extends HTMLElement {
             s.innerText = `${songs.length} song${songs.length > 1 ? 's' : ''}`
         }
         this._n = name
+        this.addEventListener('click', ({ path }) => {
+            if (path[0].classList.contains('x')) {
+                clearListCache(name)
+                o.classList.remove('yes')
+            } else {
+                navElem.hide()
+            }
+        })
     }
 })

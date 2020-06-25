@@ -83,11 +83,11 @@ customElements.define('theta-list', class extends HTMLElement {
     transform:rotate(450deg);
 }
 #play:hover{
-    color:hsl(200,40%,80%);
+    color:var(--hover);
 }
 
 #play:active{
-    color:hsl(200,100%,70%);
+    color:var(--active);
 }
 </style>
 <div id="songs">

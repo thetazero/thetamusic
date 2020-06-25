@@ -140,9 +140,11 @@ customElements.define('theta-nav', class extends HTMLElement {
             s('')
             res.classList.remove('hide')
         })
-        searchElem.addEventListener('blur', () => {
-            searchElem.value = ''
-            res.classList.add('hide')
+        // searchElem.addEventListener('blur', () => {
+        //     this.hide()
+        // })
+        this.shadowRoot.querySelector('.logo').addEventListener('click', () => { 
+            this.hide()
         })
         searchElem.addEventListener('keyup', () => {
             s(searchElem.value)
@@ -179,5 +181,10 @@ customElements.define('theta-nav', class extends HTMLElement {
     offline() {
         this.wifiElem.classList.remove('on')
         this.wifiElem.classList.add('off')
+    }
+
+    hide() {
+        this.shadowRoot.querySelector('.search').value = ''
+        this.shadowRoot.querySelector('.res').classList.add('hide')
     }
 })
