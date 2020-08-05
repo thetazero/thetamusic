@@ -116,16 +116,16 @@ customElements.define('theta-list', class extends HTMLElement {
         this._queue = val
         this.shadowRoot.querySelector('#songs').innerHTML = val.map((e, i) => {
             e = e.replace(".mp3", "")
-            if (i == this._id) {
+            if (i == this.index) {
                 return `<div class='selected'>${e}</div>`
             }
             return `<div>${e}</div>`
         }).join('\n')
         Array.from(this.shadowRoot.querySelectorAll('#songs div')).forEach((elem, index) => {
             elem.addEventListener('click', () => {
-                console.log(this.id, index)
-                if (this.id != index) {
-                    this.id = index
+                console.log(this.index, index)
+                if (this.index != index) {
+                    this.index = index
                     this.play()
                 } else {
                     this.toggle()
@@ -134,19 +134,24 @@ customElements.define('theta-list', class extends HTMLElement {
         })
     }
 
-    set id(value) {
+    set index(value) {
         let songElems = this.shadowRoot.querySelectorAll('#songs div')
         songElems[this._id].classList.remove('selected')
         this._id = value
         if (this._id == this.queue.length) {
             this._id = 0
+        } else if (this._id < 0) {
+            this._id = this.queue.length - 1
         }
         songElems[this._id].classList.add('selected')
         let audioelem = this.shadowRoot.querySelector('#audio')
         audioelem.src = this._srcs[this._id]
+        if (this.playing) {
+            this.play()
+        }
     }
 
-    get id() {
+    get index() {
         return this._id
     }
 
@@ -159,13 +164,14 @@ customElements.define('theta-list', class extends HTMLElement {
         this.path = val.path
         this.queue = val.songs
         this._srcs = val.songs.map(e => {
-            return `${this.path}/${e}`
+            return `${this.path}${e}`
         })
         cachePlaylist(val.name, this._srcs, val)
-        this.id = 0
+        this.index = 0
 
         console.log(this._srcs)
     }
+
     play() {
         let audioelem = this.shadowRoot.querySelector('#audio')
         let playbtn = this.shadowRoot.querySelector("#play")
@@ -188,11 +194,10 @@ customElements.define('theta-list', class extends HTMLElement {
         } else {
             this.play()
         }
-        console.log(this.playing)
     }
 
     next() {
-        this.id++
+        this.index++
         this.play()
     }
 })

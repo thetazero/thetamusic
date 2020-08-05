@@ -10,7 +10,7 @@ function getLists(path) {
     data = {}
     dirs.forEach(dir => {
         let it = readList(path, dir)
-        it.path = `/src${dir}/`
+        it.path = `/src/${dir}/`
         data[it.name] = it
         delete data[it.name].id
     })
@@ -21,7 +21,7 @@ function readList(path, dir) {
     let files = fs.readdirSync(`${path}/${dir}`)
     let meta = JSON.parse(fs.readFileSync(`${path}/${dir}/_meta.json`))
     files = files.filter(e => {
-        return e != '_meta.json'
+        return e != '_meta.json' && e != '.DS_Store'
     })
     meta.songs = files
     meta.path = path

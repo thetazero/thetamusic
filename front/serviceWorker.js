@@ -19,6 +19,7 @@ const assets = [
     "/images/icons/icon-192x192.png",
     "/images/icons/icon-512x512.png",
     "/images/icons/icon-96x96.png",
+    '/c/keyboard.js',
 ]
 
 self.addEventListener("install", installEvent => {

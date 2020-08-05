@@ -79,13 +79,15 @@ customElements.define('theta-nav', class extends HTMLElement {
         padding-right:20px;
         box-sizing:border-box;
         transform: translateY(-14px);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     }
 
-    .search::selection{
+    .search::selection {
         background:hsla(200,100%,70%,40%);
     }
 
-    .res{
+    .res {
         background:hsl(200,10%,15%);
         width:100%;
         transition:margin-left 200ms;
@@ -96,8 +98,13 @@ customElements.define('theta-nav', class extends HTMLElement {
     .res theta-result:nth-child(odd){
         background:hsl(200,10%,12%);
     }
+    
     .res.hide{
         margin-left:-100%;
+    }
+
+    .res theta-result.select {
+        background:hsl(200, 10%, 30%);
     }
 </style>
 <nav>
@@ -134,20 +141,25 @@ customElements.define('theta-nav', class extends HTMLElement {
     <theta-result></theta-result>
     <theta-result></theta-result>
 </div>`
-        let searchElem = this.shadowRoot.querySelector('.search')
+        this.searchElem = this.shadowRoot.querySelector('.search')
         let res = this.shadowRoot.querySelector('.res')
-        searchElem.addEventListener('focus', () => {
+        this.open = false
+        this.searchElem.addEventListener('focus', () => {
             s('')
             res.classList.remove('hide')
+            this.open = true
+            this.selectIndex = 0
         })
-        // searchElem.addEventListener('blur', () => {
-        //     this.hide()
-        // })
-        this.shadowRoot.querySelector('.logo').addEventListener('click', () => { 
+        this.shadowRoot.querySelector('.logo').addEventListener('click', () => {
             this.hide()
         })
-        searchElem.addEventListener('keyup', () => {
-            s(searchElem.value)
+        this.searchElem.addEventListener('keyup', (e) => {
+            if (e.key == 'Enter') {
+                this.resElems[this._index].click()
+                this.searchElem.blur()
+                return
+            }
+            s(this.searchElem.value)
         })
         async function s(query) {
             let data = await search(query, 20)
@@ -167,11 +179,28 @@ customElements.define('theta-nav', class extends HTMLElement {
             } else {
                 this.offline()
             }
-            s(searchElem.value)
+            s(this.searchElem.value)
         })
         if (!online) {
             this.offline()
         }
+        this.resElems = this.shadowRoot.querySelector('.res').children
+        this._index = 0
+    }
+
+    set selectIndex(val) {
+        this.resElems[this._index].classList.remove('select')
+        this._index = val
+        if (this._index < 0) {
+            this._index = this.resElems.length - 1
+        } else if (this._index >= this.resElems.length) {
+            this._index = 0
+        }
+        this.resElems[this._index].classList.add('select')
+    }
+
+    get selectIndex() {
+        return this._index
     }
 
     online() {
@@ -187,5 +216,6 @@ customElements.define('theta-nav', class extends HTMLElement {
     hide() {
         this.shadowRoot.querySelector('.search').value = ''
         this.shadowRoot.querySelector('.res').classList.add('hide')
+        this.open = false
     }
 })
