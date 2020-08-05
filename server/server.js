@@ -71,11 +71,13 @@ app.get('/api/list/:id', (req, res) => {
     if (data == undefined) {
         res.status(404).status(`playlist ${req.params.id} does not exist`)
     }
-    let { author, songs, name } = data
+    console.log(data, req.params.id)
+    let { author, songs, name, path } = data
     res.json({
         author,
         songs,
         name,
+        path,
     })
 })
 

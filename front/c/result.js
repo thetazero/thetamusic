@@ -6,6 +6,7 @@ customElements.define('theta-result', class extends HTMLElement {
         })
         this.addEventListener('click', async () => {
             let data = await getList(this._n)
+            console.log(data)
             listElem.pause()
             listElem._setQueue(data)
         })

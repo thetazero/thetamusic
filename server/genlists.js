@@ -10,8 +10,9 @@ function getLists(path) {
     data = {}
     dirs.forEach(dir => {
         let it = readList(path, dir)
-        data[it.id] = it
-        delete data[it.id].id
+        it.path = `/src${dir}/`
+        data[it.name] = it
+        delete data[it.name].id
     })
     return data
 }

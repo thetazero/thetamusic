@@ -167,6 +167,7 @@ customElements.define('theta-nav', class extends HTMLElement {
             } else {
                 this.offline()
             }
+            s(searchElem.value)
         })
         if (!online) {
             this.offline()

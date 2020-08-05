@@ -156,9 +156,10 @@ customElements.define('theta-list', class extends HTMLElement {
 
     _setQueue(val) {
         console.log(val)
+        this.path = val.path
         this.queue = val.songs
         this._srcs = val.songs.map(e => {
-            return `/src/${val.name}/${e}`
+            return `${this.path}/${e}`
         })
         cachePlaylist(val.name, this._srcs, val)
         this.id = 0

@@ -46,6 +46,9 @@ function cachePlaylist(name, songs, val) {
     }
     cachedLists[name] = val
     window.localStorage.setItem('cachedSongs', JSON.stringify(cachedLists))
+    if (!caches) {
+        alert("caches are not enabled")
+    }
     caches.open(`music-${name}`).then(c => {
         songs.forEach(e => {
             c.add(e)
